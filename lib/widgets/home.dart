@@ -28,6 +28,10 @@ class _MyHomePageState extends State<MyHomePage> {
     GetCategory getCategory = GetCategory();
     categoryList = await getCategory.getdata();
     log(categoryList[0].name.toString());
+    setState(() {
+          loading = false;
+
+    });
   }
 
   @override
@@ -82,9 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void setindex(int index) {
-    curruntindex = index;
     log(curruntindex.toString());
-    setState(() {});
+    setState(() {
+    curruntindex = index;
+    });
     loading = false;
   }
 }
@@ -106,7 +111,9 @@ class _subcategoryState extends State<subcategory> {
     GetSubCategory getSubCategory = GetSubCategory();
     log(widget.id.toString());
     subcategorylList = await getSubCategory.getdata(widget.id);
-
+    setState(() {
+      
+    });
     super.didChangeDependencies();
   }
 
