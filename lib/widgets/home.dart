@@ -18,9 +18,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Category_model> categoryList = [];
+  List<SubcategoryModle> subcategorylList = [];
+  List<ProductModel> productList = [];
   var curruntSategoryindex = 0;
   var loading = true;
   int curruntindex = 0;
+      // GetSubCategory getSubCategory = GetSubCategory();
+
 
   @override
   void didChangeDependencies() async {
@@ -29,13 +33,16 @@ class _MyHomePageState extends State<MyHomePage> {
     categoryList = await getCategory.getdata();
     log(categoryList[0].name.toString());
     setState(() {
-          loading = false;
-
+      loading = false;
     });
+                          // subcategorylList = // list<list,list,list>
+                          //     await getSubCategory
+                          //         .getdata(categoryList[0].id);
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 100,
@@ -58,7 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   scrollDirection: Axis.horizontal,
                   itemCount: categoryList.length,
                   itemBuilder: ((context, index) => GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          GetSubCategory getSubCategory = GetSubCategory();
+                          subcategorylList = // list<list,list,list>
+                              await getSubCategory
+                                  .getdata(categoryList[index].id);
+
                           setindex(index);
                           setState(() {});
                           log(curruntindex.toString());
@@ -81,65 +93,51 @@ class _MyHomePageState extends State<MyHomePage> {
         body: loading
             ? CircularProgressIndicator()
             : subcategory(
-                id: categoryList[curruntindex].id,
+                list: subcategorylList,
               ));
   }
 
   void setindex(int index) {
     log(curruntindex.toString());
     setState(() {
-    curruntindex = index;
+      curruntindex = index;
+      loading = false;
     });
-    loading = false;
   }
 }
 
 class subcategory extends StatefulWidget {
-  final int id;
-  const subcategory({super.key, required this.id});
+  final List<SubcategoryModle> list;
+  const subcategory({super.key, required this.list});
 
   @override
   State<subcategory> createState() => _subcategoryState();
 }
 
 class _subcategoryState extends State<subcategory> {
-  List<SubcategoryModle> subcategorylList = [];
-
-  @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    GetSubCategory getSubCategory = GetSubCategory();
-    log(widget.id.toString());
-    subcategorylList = await getSubCategory.getdata(widget.id);
-    setState(() {
-      
-    });
-    super.didChangeDependencies();
-  }
+  bool loading = true;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      child: ListView.builder(
-        itemCount: subcategorylList.length,
-        itemBuilder: ((context, index) {
-          return Container(
-            height: 500,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Text(
-                  subcategorylList[index].name,
+    return ListView.builder(
+      itemCount: widget.list.length,
+      itemBuilder: ((context, index) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left :8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.list[index].name,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                // Container(
-                //     height: 200, child: Product(id: subcategorylList[index].id))
-              ],
+              ),
             ),
-          );
-        }),
-      ),
+            Product(id: widget.list[index].id)
+          ],
+        );
+      }),
     );
   }
 }
@@ -158,25 +156,29 @@ class _ProductState extends State<Product> {
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+    log(widget.id.toString());
     GetProduct getProduct = GetProduct();
     productList = await getProduct.getdata(widget.id);
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: productList.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return Container(
-            height: 500,
-            child: Column(children: [
+    return Container(
+      height: 100,
+      child: ListView.builder(
+          itemCount: productList.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return Column(children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Stack(
                   children: [
-                    Image.network(productList[index].image),
+                    Container(
+                      height: 70,
+                      width: 70,
+                      child: Image.network(productList[index].image)),
                     Container(
                       height: 20,
                       width: 20,
@@ -187,12 +189,11 @@ class _ProductState extends State<Product> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left : 8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(productList[index].name),
               )
-            ]),
-          );
-        });
-    ;
+            ]);
+          }),
+    );
   }
 }
