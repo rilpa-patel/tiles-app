@@ -64,14 +64,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: categoryList.length,
                   itemBuilder: ((context, index) => GestureDetector(
                         onTap: () async {
-                          GetSubCategory getSubCategory = GetSubCategory();
-                          subcategorylList = await getSubCategory
+                    
+                          subcategorylList = await GetSubCategory()
                               .getdata(categoryList[index].id);
 
                           setState(() {
                             setindex(index);
                           });
-                          log(curruntindex.toString());
+                        
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20.0),
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 20,
                 child: CircularProgressIndicator(),
               )
-            : subcategory(
+            : Subcategory(
                 list: subcategorylList,
               ));
   }
@@ -108,22 +108,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class subcategory extends StatefulWidget {
+class Subcategory extends StatefulWidget {
   final List<SubcategoryModle> list;
-  const subcategory({super.key, required this.list});
+  const Subcategory({super.key, required this.list});
 
   @override
-  State<subcategory> createState() => _subcategoryState();
+  State<Subcategory> createState() => _SubcategoryState();
 }
 
-class _subcategoryState extends State<subcategory> {
+class _SubcategoryState extends State<Subcategory> {
   bool loading = true;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    setState(() {
+      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: widget.list.length,
-      itemBuilder: ((context, index) =>  Product(id: widget.list[index].id , name:widget.list[index].name ,)),
+      itemBuilder: ((context, index){ 
+      
+        return Product ( key: Key(index.toString()),id:  widget.list[index].id , name:widget.list[index].name);}),
     );
   }
 }

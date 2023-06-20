@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class GetSubCategory {
-  List<SubcategoryModle> Data = [];
+  List<SubcategoryModle> data = [];
 
   Future<List<SubcategoryModle>> getdata(int id) async {
     //fuction for get product using categoryid
@@ -25,7 +25,7 @@ class GetSubCategory {
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
-      print(await response.body);
+      print( response.body);
     } else {
       print(response.reasonPhrase);
     }
@@ -33,14 +33,15 @@ class GetSubCategory {
     var temp = json.decode(response.body);
 
     temp['Result']['Category'].forEach((element) {
+      print("bhui");
       log(element['SubCategories']. toString());
               // Data.add(SubcategoryModle(element['SubCategories']['Id'], element['SubCategories']['Name']));
 
       element['SubCategories']?.forEach((value){
-              Data.add(SubcategoryModle(value['Id'], value['Name']));
+              data.add(SubcategoryModle(value['Id'], value['Name']));
       });
     });
 
-    return Data;
+    return data;
   }
 }

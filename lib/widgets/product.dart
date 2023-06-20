@@ -14,24 +14,48 @@ class Product extends StatefulWidget {
 }
 
 class _ProductState extends State<Product> {
+    int previousId = 0;
+
   List<ProductModel> productList = [];
   bool loading = true;
-  @override
-  void initState() {
-    print("init");
-    // TODO: implement initState
-    super.initState();
+
+ 
+ @override
+  void didUpdateWidget(covariant Product oldWidget){
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    _handleDataUpdate();
+     
+  }
+
+  Future<void> _handleDataUpdate() async {
+    productList = await GetProduct().getdata(widget.id);
+    // Perform asynchronous work here
+    // Example: Fetch updated data from an API
+
+    // Ensure you handle any error scenarios and update the UI accordingly
+
+    // Once the asynchronous work is complete, you can update the state if necessary using `setState`
+     setState(() {
+      loading = false;
+    });
   }
 
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
-    log(widget.id.toString());
-    GetProduct getProduct = GetProduct();
-    productList = await getProduct.getdata(widget.id);
+   
+       productList = await GetProduct().getdata(widget.id);
+        
+   
+      // Handle the necessary updates when the data changes
+      // Example: Fetch updated data from an API or update UI state
     setState(() {
       loading = false;
     });
+    log(widget.id.toString());
+    // GetProduct getProduct = GetProduct();
+  
     super.didChangeDependencies();
   }
 
@@ -40,7 +64,6 @@ class _ProductState extends State<Product> {
     return loading
         ? CircularProgressIndicator()
         : Column(
-          
           children: [
             Padding(
             padding: const EdgeInsets.only(left: 8.0),
@@ -70,7 +93,7 @@ class _ProductState extends State<Product> {
                             Container(
                               height: 20,
                               width: 20,
-                              decoration: BoxDecoration(color: Colors.blue),
+                              decoration: const BoxDecoration(color: Colors.blue),
                               child: Text(productList[index].pricecode),
                             )
                           ],

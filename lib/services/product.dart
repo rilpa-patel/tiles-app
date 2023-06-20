@@ -27,12 +27,8 @@ class GetProduct {
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
-      print(await response.body);
-    } else {
-      print(response.reasonPhrase);
-    }
-
-    var temp = json.decode(response.body);
+      print( response.body);
+        var temp = json.decode(response.body);
 
     temp['Result'].forEach((element) {
       Data.add(ProductModel(
@@ -41,6 +37,11 @@ class GetProduct {
           element['Name']));
     });
 
+    } else {
+      print(response.reasonPhrase);
+    }
+
+  
     return Data;
   }
 }
