@@ -36,7 +36,7 @@ class GetSubCategory {
       log(element['SubCategories']. toString());
               // Data.add(SubcategoryModle(element['SubCategories']['Id'], element['SubCategories']['Name']));
 
-      element['SubCategories'].forEach((value){
+      element['SubCategories']?.forEach((value){
               Data.add(SubcategoryModle(value['Id'], value['Name']));
       });
     });

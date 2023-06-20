@@ -7,6 +7,7 @@ import 'package:esptiles/models/subcategory_model.dart';
 import 'package:esptiles/services/category.dart';
 import 'package:esptiles/services/product.dart';
 import 'package:esptiles/services/subcategory.dart';
+import 'package:esptiles/widgets/product.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -23,8 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var curruntSategoryindex = 0;
   var loading = true;
   int curruntindex = 0;
-      // GetSubCategory getSubCategory = GetSubCategory();
-
+  // GetSubCategory getSubCategory = GetSubCategory();
 
   @override
   void didChangeDependencies() async {
@@ -32,17 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
     GetCategory getCategory = GetCategory();
     categoryList = await getCategory.getdata();
     log(categoryList[0].name.toString());
+
+    subcategorylList = await GetSubCategory().getdata(categoryList[0].id);
     setState(() {
       loading = false;
     });
-                          // subcategorylList = // list<list,list,list>
-                          //     await getSubCategory
-                          //         .getdata(categoryList[0].id);
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
         appBar: AppBar(
           toolbarHeight: 100,
@@ -67,12 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: ((context, index) => GestureDetector(
                         onTap: () async {
                           GetSubCategory getSubCategory = GetSubCategory();
-                          subcategorylList = // list<list,list,list>
-                              await getSubCategory
-                                  .getdata(categoryList[index].id);
+                          subcategorylList = await getSubCategory
+                              .getdata(categoryList[index].id);
 
-                          setindex(index);
-                          setState(() {});
+                          setState(() {
+                            setindex(index);
+                          });
                           log(curruntindex.toString());
                         },
                         child: Padding(
@@ -91,7 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         body: loading
-            ? CircularProgressIndicator()
+            ? Container(
+                alignment: Alignment.center,
+                height: 20,
+                child: CircularProgressIndicator(),
+              )
             : subcategory(
                 list: subcategorylList,
               ));
@@ -121,79 +123,7 @@ class _subcategoryState extends State<subcategory> {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: widget.list.length,
-      itemBuilder: ((context, index) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left :8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.list[index].name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Product(id: widget.list[index].id)
-          ],
-        );
-      }),
-    );
-  }
-}
-
-class Product extends StatefulWidget {
-  final int id;
-  const Product({super.key, required this.id});
-
-  @override
-  State<Product> createState() => _ProductState();
-}
-
-class _ProductState extends State<Product> {
-  List<ProductModel> productList = [];
-
-  @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    log(widget.id.toString());
-    GetProduct getProduct = GetProduct();
-    productList = await getProduct.getdata(widget.id);
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 110,
-      child: ListView.builder(
-          itemCount: productList.length,
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 70,
-                      width: 90,
-                      child: Image.network(productList[index].image)),
-                    Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(color: Colors.blue),
-                      child: Text(productList[index].pricecode),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(productList[index].name),
-              )
-            ]);
-          }),
+      itemBuilder: ((context, index) =>  Product(id: widget.list[index].id , name:widget.list[index].name ,)),
     );
   }
 }
