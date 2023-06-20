@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text("ESPtiles"),
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 110.0),
+            padding: const EdgeInsets.only(top: 130.0),
             child: Container(
               height: 200,
               alignment: Alignment.bottomCenter,
@@ -165,7 +165,7 @@ class _ProductState extends State<Product> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 110,
       child: ListView.builder(
           itemCount: productList.length,
           scrollDirection: Axis.horizontal,
@@ -177,7 +177,7 @@ class _ProductState extends State<Product> {
                   children: [
                     Container(
                       height: 70,
-                      width: 70,
+                      width: 90,
                       child: Image.network(productList[index].image)),
                     Container(
                       height: 20,

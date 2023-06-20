@@ -19,7 +19,7 @@ class GetProduct {
         'POST',
         Uri.parse(
             'http://esptiles.imperoserver.in/api/API/Product/ProductList'));
-    request.body = json.encode({"PageIndex": 2, "SubCategoryId": id});
+    request.body = json.encode({"PageIndex": 1, "SubCategoryId": id});
 
     request.headers.addAll(headers);
 
